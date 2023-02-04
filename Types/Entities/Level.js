@@ -513,25 +513,40 @@ function Level(spec) {
     }
   }
 
+
+
   function goalFailed(goal) {
     if (goal.order) {
       for (g of goals) {
-        if (g.order && !g.completed)
-          g.fail()
+        if (g.order && !g.completed) g.fail();
       }
     }
 
-    assets.sounds.goal_fail.play()
+    assets.sounds.goal_fail.play();
+    ui.tryAgain.style.display = "block";
   }
+
+  ui.tryAgain.addEventListener("click", function () {
+    this.classList.add('slide-out');
+    reset();
+    setTimeout(() => {
+      this.classList.remove('slide-out');
+      this.style.display = 'none';
+    }, 500);
+    ui.tryAgain.style.display = "none";
+    ui.tryAgain.removeEventListener("click", reset);
+});
 
   function playOpenMusic() {
     if (openMusic)
       openMusic.play()
   }
+  
 
   function reset() {
     stopRunning()
   }
+
 
   function restart() {
     const expression = isConstantLake() ? defaultVectorExpression : defaultExpression
