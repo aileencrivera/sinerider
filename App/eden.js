@@ -15,8 +15,7 @@ worldData.push({
       lavamonster_jaw: '.webp',
       lavamonster_top_jaw: '.webp',
       lavamonster_bottom_jaw: '.webp',
-      sinusoidaldesertbiome_1: 'sinusoidaldesertbiome_1.webp',
-      sinusoidaldesertbiome_2: 'sinusoidaldesertbiome_2.webp',
+      sinusoidal_desert_background: 'sinusoidal_desert_background.webp',
       sam_sled: 'ada_sled.webp',
       sam_float: 'ada_float_right.webp',
       sam_float_dark: '.svg',
@@ -51,7 +50,7 @@ worldData.push({
       western_slopes_background: '.webp',
       western_slopes_background_no_sky: '.webp',
       eternal_canyon_background: '.webp',
-      valley_background: 'logistic_dunes_background.webp',
+      valley_parabola_background: 'valley_parabola_background.webp',
       volcano_background: '.webp',
       volcano_background_tall: '.webp',
       volcano_background_medium: '.webp',
@@ -271,44 +270,6 @@ worldData.push({
           offset: Vector2(0, 0.5),
           anchored: true,
         },
-        // {
-        //   asset: 'images.tree_home_1',
-        //   drawOrder: LAYERS.foreSprites,
-        //   flipX: '*',
-        //   size: 5.2,
-        //   x: 21,
-        //   y: 0,
-        //   offset: Vector2(0, 0.8),
-        //   anchored: true
-        // },
-        // {
-        //   asset: 'images.tree_home_1',
-        //   flipX: '*',
-        //   size: 5.9,
-        //   x: 10,
-        //   y: 0,
-        //   offset: Vector2(0, 0.8),
-        //   anchored: true
-        // },
-        // {
-        //   asset: 'images.tree_home_1',
-        //   drawOrder: LAYERS.foreSprites,
-        //   flipX: '*',
-        //   size: 7.1,
-        //   x: 34.2,
-        //   y: 0,
-        //   offset: Vector2(0, 0.7),
-        //   anchored: true
-        // },
-        // {
-        //   asset: 'images.tree_home_1',
-        //   flipX: '*',
-        //   size: 5.6,
-        //   x: 36.3,
-        //   y: 0,
-        //   offset: Vector2(0, 0.8),
-        //   anchored:true
-        // },
         {
           asset: 'images.crow',
           flipX: '*',
@@ -385,6 +346,7 @@ worldData.push({
     ...TIME,
     ...SWAMP,
     VOLCANO,
+    CREDITS,
   ],
 })
 

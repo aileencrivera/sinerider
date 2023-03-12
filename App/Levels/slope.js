@@ -57,7 +57,7 @@ const SLOPE = [
       },
     ],
     slider: {
-      expression: 'nx',
+      expression: '$\\cdot x',
       bounds: [-1, 1, -1],
     },
     textBubbles: [
@@ -140,7 +140,7 @@ const SLOPE = [
         content: 'Well done! Now sled through this path',
       },
     ],
-    slider: { expression: 'nx', bounds: [-1, 1, 1] },
+    slider: { expression: '$\\cdot x', bounds: [-1, 1, 1] },
     sky: {
       asset: 'images.western_slopes_background',
       margin: 1,
@@ -153,18 +153,16 @@ const SLOPE = [
     colors: Colors.biomes.alps,
     x: 10,
     y: -10,
-    camera: {
-      x: 2,
-      y: -5.5,
-      fov: 11,
-    },
     requirements: ['SLOPE_NEGATIVE'],
     defaultExpression: '-x',
-    hint: 'hint: try multiplying',
+    slider: {
+      expression: '$\\cdot x',
+      bounds: [-2, 2, -1],
+    },
     goals: [
       {
         type: 'path',
-        expression: '-x*2',
+        expression: '-x*3',
         pathX: 6,
         x: 2,
         y: 0,
@@ -184,8 +182,8 @@ const SLOPE = [
             x: 0.4,
             y: 0.7,
             content: 'Steep.',
-            direction: 'up-right-right',
-            distance: 0.6,
+            direction: 'up-right',
+            distance: 0.8,
             // speech: {
             //   content: 'This seems dangerous.',
             //   distance: 1,
@@ -194,10 +192,6 @@ const SLOPE = [
         ],
       },
     ],
-    slider: {
-      expression: 'nx',
-      bounds: [-1.5, -1, -1],
-    },
     sky: {
       asset: 'images.western_slopes_background',
       margin: 1,
@@ -210,19 +204,17 @@ const SLOPE = [
     colors: Colors.biomes.alps,
     x: 10,
     y: 0,
-    camera: {
-      x: 2,
-      y: 0,
-      fov: 7,
-    },
     requirements: null,
-    hint: 'hint: what’s the opposite of multiplying?',
     defaultExpression: '-x',
+    slider: {
+      expression: '-\\frac{x}{$}',
+      bounds: [1, 2, 1],
+    },
     goals: [
       {
         type: 'path',
-        expression: '-x/2',
-        pathX: 6,
+        expression: '-x/3',
+        pathX: 8,
         x: 2,
         y: 0,
       },
@@ -257,7 +249,6 @@ const SLOPE = [
         ],
       },
     ],
-    slider: { expression: '\\frac{-x}{n}', bounds: [1, 1.5, 1] },
     sky: {
       asset: 'images.western_slopes_background',
       margin: 1,
@@ -277,11 +268,15 @@ const SLOPE = [
     },
     requirements: ['SLOPE_NEGATIVE'],
     defaultExpression: '-x-3',
+    slider: {
+      expression: '-x+$',
+      bounds: [-3, 3, -3],
+    },
     hint: 'hint: add a constant',
     goals: [
       {
         type: 'path',
-        expression: '-x+7',
+        expression: '-x+8',
         pathX: 6,
         x: 2,
         y: 0,
@@ -291,25 +286,28 @@ const SLOPE = [
       {
         speech: [
           {
+            y: 0.6,
             speakerX: -0.4,
-            content: '…sorry.',
+            // speakerY: 0.6,
+            content: '…ok.',
             direction: 'up-left',
             distance: 1,
             speech: {
-              content: 'Things seem better today!',
+              content: "Hey, I'm sorry about last night.",
               distance: 1,
             },
           },
           {
-            speakerX: 0.3,
+            y: 0.7,
+            speakerX: 0.5,
+            // speakerY: 0.7,
             content: 'Yeah. Can we not talk about it?',
             direction: 'right-up-up',
-            distance: 1.3,
+            distance: 1.25,
           },
         ],
       },
     ],
-    slider: { expression: '-x + n', bounds: [-3, 1, -3] },
     sky: {
       asset: 'images.western_slopes_background',
       margin: 1,
@@ -359,7 +357,7 @@ const SLOPE = [
         ],
       },
     ],
-    slider: { expression: '-x + n', bounds: [-2, 0, 0] },
+    slider: { expression: '-x + $', bounds: [-2, 0, 0] },
     sky: {
       asset: 'images.western_slopes_background',
       margin: 1,
