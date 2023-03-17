@@ -1,7 +1,7 @@
 const CREDITS = {
   name: 'Credits',
   nick: 'CREDITS',
-  colors: Colors.biomes.home,
+  biome: 'home',
   axesEnabled: false,
   runAsCutscene: true,
   x: -10,
@@ -39,14 +39,14 @@ const CREDITS = {
     },
     {
       type: 'lerp',
-      point0: [-6, 0],
-      point1: [-2, 0],
+      point0: [-4, 0],
+      point1: [0, 0],
       state0: {
         position: [10, 6],
         fov: 18,
       },
       state1: {
-        position: [10, -8],
+        position: [10, -10],
         fov: 18,
       },
     },
@@ -274,12 +274,14 @@ const CREDITS = {
   ],
   goals: [],
   sledders: [],
-  sky: {
-    asset: 'images.initial_bg',
-    margin: 1,
-  },
-  // snow: {},
-  sounds: [],
+  sounds: [
+    {
+      asset: 'sounds.music.credits',
+      domain: [-6, -0],
+      // fadeOut: 800,
+      // duration: 20000,
+    },
+  ],
   walkers: [
     {
       name: 'Ada',

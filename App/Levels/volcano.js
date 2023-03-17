@@ -107,6 +107,8 @@ const VOLCANO = (() => {
         color: '#FFF',
         content: 'Stop stalling! Tell me your stupid idea already.',
         direction: 'up-up-left',
+        gap: 0.5,
+        length: 4,
       },
       {
         speaker: 'Jack',
@@ -131,12 +133,14 @@ const VOLCANO = (() => {
         color: '#FFF',
         content: 'We jump it.',
         direction: 'up-up-left',
+        gap: 1,
       },
       {
         speaker: 'Ada',
         color: '#FFF',
         content: 'That sounds dangerous',
         direction: 'up-up-left',
+        gap: 3,
       },
       {
         speaker: 'Jack',
@@ -451,14 +455,12 @@ const VOLCANO = (() => {
         x: -34.5,
       },
     ],
+    backgroundMusic: {
+      asset: 'sounds.music.volcano.start',
+      volume: 0.4,
+      domain: [-1001, -1000, -45, -40],
+    },
     sounds: [
-      {
-        asset: 'sounds.music.volcano.start',
-        loop: true,
-        volume: 0.4,
-        domain: [-1001, -1000, -45, -40],
-        debug: true,
-      },
       {
         asset: 'sounds.music.volcano.jump',
         loop: false,
