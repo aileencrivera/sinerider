@@ -59,6 +59,8 @@ worldData.push({
       volcano_rock_2: '.webp',
       volcano_rock_4: '.webp',
       volcano_trees: '.webp',
+      volcano_tree_1: '.webp',
+      volcano_tree_2: '.webp',
       logo_text: '.webp',
       rock_1: '.webp',
       rock_2: '.webp',
@@ -80,6 +82,8 @@ worldData.push({
       grass_2: '.webp',
       tumbleweed: '.webp',
       cactus: '.webp',
+      blooming_joshua_tree: '.webp',
+      desert_tree: '.webp',
     },
     sounds: {
       music: {
