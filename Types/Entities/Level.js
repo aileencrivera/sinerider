@@ -80,14 +80,23 @@ function Level(spec) {
     ...cameraSpec,
   })
 
+  // axesEnabled can be specified in datum or overridden in spec (LevelBubbles)
   let axes = null
-  if (!datum.hasOwnProperty('axesEnabled') || datum.axesEnabled)
+  let axesEnabled = spec.hasOwnProperty('axesEnabled')
+    ? spec.axesEnabled
+    : datum.hasOwnProperty('axesEnabled')
+    ? datum.axesEnabled
+    : true
+
+  if (axesEnabled)
     axes = Axes({
       drawOrder: LAYERS.axes,
       camera,
       globalScope,
       parent: self,
     })
+
+  if (axes) trackedEntities.unshift(axes)
 
   function setCoordinates(x, y) {
     Point = Vector2(x, y)
@@ -100,7 +109,6 @@ function Level(spec) {
     }
     CoordinateBox1.refreshDOM(NewPoint.x, NewPoint.y, Point.x, Point.y)
   }
-  if (axes) trackedEntities.unshift(axes)
 
   let gridlines = null
   gridlines = Gridlines({
@@ -158,6 +166,7 @@ function Level(spec) {
     drawOrder: LAYERS.graph,
     colors,
     sledders,
+    useInterpolation: false,
   })
 
   let shader = null // Only loaded for Constant Lake

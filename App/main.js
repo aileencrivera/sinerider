@@ -12,6 +12,10 @@ const ui = {
   levelButtonString: $('#level-button > .string'),
   resetButton: $('#reset-button'),
 
+  resetConfirmationDialog: $('#reset-confirmation-dialog'),
+  resetConfirmButton: $('#reset-confirmation-yes'),
+  resetCancelButton: $('#reset-confirmation-no'),
+
   tryAgainButton: $('#try-again-button'),
 
   veil: $('#veil'),
@@ -103,11 +107,11 @@ const ticksPerSecondOverridden = urlParams.has('ticksPerSecond')
 // 30 ticks per second default, but overridable via query param
 const ticksPerSecond = ticksPerSecondOverridden
   ? urlParams.get('ticksPerSecond')
-  : 30
+  : 60
 
 // This is deliberately decoupled from 'ticksPerSecond' such that we can keep consistent
 // predictable results while replaying the game simulation at higher-than-realtime speeds.
-const tickDelta = 1.0 / 30.0
+const tickDelta = 1.0 / 60.0
 
 const startTime = Date.now()
 
@@ -283,11 +287,13 @@ function onKeyUp(event) {
     if (!world.navigating && !world.level?.isRunningAsCutscene)
       world.toggleRunning()
   }
+  world.sendEvent('keyup', [event.key])
 }
 
 window.addEventListener('keydown', (event) => {
   if (ui.mathField.focused()) return
-  world.level?.sendEvent('keydown', [event.key])
+  // world.level?.sendEvent('keydown', [event.key])
+  world.sendEvent('keydown', [event.key])
 })
 
 window.addEventListener('keyup', onKeyUp)
@@ -371,10 +377,23 @@ function onClickEditButton(event) {
 ui.editButton.addEventListener('click', onClickEditButton)
 
 function onClickResetButton(event) {
-  world.onClickResetButton()
+  ui.resetConfirmationDialog.showModal()
 }
 
 ui.resetButton.addEventListener('click', onClickResetButton)
+
+function onResetConfirm() {
+  world.onResetConfirm()
+  ui.resetConfirmationDialog.close()
+}
+
+ui.resetConfirmButton.addEventListener('click', onResetConfirm)
+
+function onResetCancel() {
+  ui.resetConfirmationDialog.close()
+}
+
+ui.resetCancelButton.addEventListener('click', onResetCancel)
 
 function onResizeWindow(event) {
   world.sendEvent('resize', [window.innerWidth, window.innerHeight])
@@ -427,8 +446,6 @@ function onMouseUpCanvas(event) {
 }
 
 canvas.addEventListener('mouseup', onMouseUpCanvas)
-canvas.addEventListener('pointerup', onMouseUpCanvas)
-window.addEventListener('mouseup', onMouseUpCanvas)
 window.addEventListener('pointerup', onMouseUpCanvas)
 
 ui.levelInfoDiv.addEventListener('mouseover', function () {
