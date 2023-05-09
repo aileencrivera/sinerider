@@ -9,7 +9,6 @@ function Level(spec) {
 
   const {
     globalScope,
-    levelCompleted,
     isBubbleLevel,
     datum,
     storage,
@@ -33,6 +32,14 @@ function Level(spec) {
     victoryX = null,
   } = datum
 
+  let completed = false
+  let hasBeenCompleted = spec.hasBeenCompleted ?? false
+
+  const levelCompleted = (soft = false) => {
+    hasBeenCompleted = true
+    spec.levelCompleted(soft)
+  }
+
   const quads = globalScope.quads
 
   const sledders = []
@@ -52,6 +59,10 @@ function Level(spec) {
   let CoordinateBox1 = null
 
   let usingTInExpression = false
+
+  assets.sounds.level_success.volume(0.5)
+  assets.sounds.goal_success.volume(0.5)
+  assets.sounds.goal_fail.volume(0.5)
 
   if (!isBubbleLevel) {
     if (flashMathField) ui.expressionEnvelope.classList.add('flash-shadow')
@@ -153,8 +164,7 @@ function Level(spec) {
     darkBufferOrScreen = darkenBufferScreen
   }
 
-  const startingExpression =
-    (!isConstantLakeAndNotBubble() ? savedLatex : null) ?? defaultExpression
+  const startingExpression = getStartingExpression()
 
   const graph = Graph({
     camera,
@@ -169,8 +179,6 @@ function Level(spec) {
   })
 
   let shader = null // Only loaded for Constant Lake
-
-  let completed = false
 
   let skyColors = colors.sky
 
@@ -384,6 +392,12 @@ function Level(spec) {
       ui.mathField.latex(startingExpression)
       ui.mathFieldStatic.latex(startingExpression)
     }
+    if (runAsCutscene) {
+      ui.stopButton.classList.add('disabled')
+    }
+    if (!runAsCutscene) {
+      ui.stopButton.classList.remove('disabled')
+    }
   }
 
   function start() {}
@@ -422,6 +436,18 @@ function Level(spec) {
         }
       }
     }
+  }
+
+  function getStartingExpression() {
+    let isPuzzle = urlData?.isPuzzle ?? false
+    if (isPuzzle) {
+      return urlData?.expressionOverride
+        ? urlData?.expressionOverride
+        : defaultExpression
+    }
+    return (
+      (!isConstantLakeAndNotBubble() ? savedLatex : null) ?? defaultExpression
+    )
   }
 
   function getCutsceneDistanceParameter() {
@@ -693,6 +719,7 @@ function Level(spec) {
         completed = true
         levelCompleted()
         assets.sounds.level_success.play()
+        save()
       }
     }
   }
@@ -709,6 +736,7 @@ function Level(spec) {
     const json = {
       v: 0.1, // TODO: change version handling to World?
       nick: datum.nick,
+      completed: hasBeenCompleted,
       savedLatex: isConstantLakeAndNotBubble()
         ? vectorExpression
         : currentLatex,
@@ -909,14 +937,6 @@ function Level(spec) {
     }
 
     if (!isBubbleLevel && isVolcano()) {
-      VolcanoShader({
-        parent: self,
-        screen,
-        assets,
-        quad: quads.volcano,
-        drawOrder: LAYERS.volcanoPostProcessing,
-        sledders,
-      })
       LavaMonster({
         parent: self,
         world,
@@ -1022,8 +1042,8 @@ function Level(spec) {
   }
 
   function save() {
-    // Do not write to URL if debug level is set
-    if (DEBUG_LEVEL) return
+    // Do not write to URL if debug level is set or if this is a bubble level
+    if (DEBUG_LEVEL || isBubbleLevel) return
 
     // Save to player storage and to URI
     storage.setLevel(datum.nick, serialize())
@@ -1187,6 +1207,9 @@ function Level(spec) {
     },
     get completed() {
       return completed
+    },
+    get nick() {
+      return datum.nick
     },
 
     isEditor,

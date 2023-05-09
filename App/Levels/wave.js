@@ -54,7 +54,7 @@ const WAVE = [
           {
             x: 0.3,
             y: 0.7,
-            content: 'You\'re late.',
+            content: "You're late.",
             color: '#FFF',
             direction: 'up-up-left',
             distance: 1,
@@ -96,10 +96,16 @@ const WAVE = [
           {
             x: 0.3,
             y: 0.65,
-            content: 'I waited six hours.',
+            content: 'I have waited *ten* hours.',
             color: '#FFF',
-            direction: 'up',
-            distance: 1.2,
+            direction: 'up-up-left',
+            distance: 1.3,
+            speech: {
+              content: 'Ten hours.',
+              color: '#FFF',
+              direction: 'up',
+              distance: 0.7,
+            },
           },
         ],
       },
@@ -109,19 +115,19 @@ const WAVE = [
         y: 0,
         speech: [
           {
-            x: 0.2,
-            y: 0.5,
-            content: 'I\'m sorry I held you up.',
+            x: 0.1,
+            y: 0.45,
+            content: "…and I'm really sorry.",
             color: '#FFF',
-            direction: 'up',
-            distance: 0.6,
+            direction: 'up-left',
+            distance: 0.8,
             speech: [
               {
-                // x
-                content: 'Thanks for staying.',
+                y: 0.8,
+                content: 'I know.',
                 color: '#FFF',
-                direction: 'up-right',
-                distance: 1,
+                direction: 'up',
+                distance: 0.6,
               },
             ],
           },
@@ -134,10 +140,10 @@ const WAVE = [
     name: 'Cos',
     nick: 'COS_SCALE_X_Y',
     biome: 'sinusoidalDesert',
-    x: 0,
-    y: -20,
+    x: 10,
+    y: -10,
     requirements: ['DESERT'],
-    defaultExpression: '\\sin \\left(x\\right)',
+    defaultExpression: '\\cos \\left(x\\right)',
     goals: [
       {
         type: 'path',
@@ -159,11 +165,31 @@ const WAVE = [
         asset: 'images.sam_sled',
         x: -TAU + 0.1,
         y: 0,
+        speech: [
+          {
+            x: 0.3,
+            y: 0.65,
+            content: "I'm still mad at you.",
+            color: '#FFF',
+            direction: 'up-up-right',
+            distance: 1.2,
+          },
+        ],
       },
       {
         asset: 'images.lunchbox_sled',
         x: TAU - 0.1,
         y: 0,
+        speech: [
+          {
+            x: 0.3,
+            y: 0.65,
+            content: 'I know.',
+            color: '#FFF',
+            direction: 'up-up-left',
+            distance: 0.8,
+          },
+        ],
       },
     ],
   },
@@ -174,7 +200,7 @@ const WAVE = [
     x: -10,
     y: -10,
     requirements: ['DESERT'],
-    defaultExpression: '\\sin \\left(x\\right)',
+    defaultExpression: '\\sin \\left(x+\\frac{pi}{4}\\right)',
     slider: {
       expression: '\\sin \\left(x+$\\right)',
       bounds: [-2, 1, 0],
@@ -204,14 +230,14 @@ const WAVE = [
           {
             x: 0.3,
             y: 0.65,
-            content: 'That\'s NOT how this works.',
+            content: "Yeah. We're not gonna win.",
             color: '#FFF',
             direction: 'up-right',
-            distance: 1.5,
-            speech : {
-              direction: 'up-right',
-              content: 'I guess we can explore more now since we can\'t win.',
-              distance: 1.5,
+            distance: 1,
+            speech: {
+              direction: 'up-up-right',
+              content: 'May as well take our time now.',
+              distance: 0.8,
               color: '#FFF',
             },
           },
@@ -223,10 +249,10 @@ const WAVE = [
           {
             x: 0.3,
             y: 0.65,
-            content: 'Yay! I was right all along!',
+            content: 'You sure?',
             color: '#FFF',
             direction: 'up-up-right',
-            distance: 1.75,
+            distance: 1.4,
           },
         ],
         x: TAU,
@@ -245,14 +271,14 @@ const WAVE = [
     goals: [
       {
         type: 'path',
-        expression: 'cos(x-1)+4',
+        expression: 'cos(x-1)+7',
         x: 2,
         y: 0,
         pathX: 4,
       },
       {
         type: 'path',
-        expression: 'cos(x-1)+4',
+        expression: 'cos(x-1)+7',
         x: TAU + 2,
         y: 0,
         pathX: 4,
@@ -263,35 +289,35 @@ const WAVE = [
         asset: 'images.sam_sled',
         x: 1,
         y: 0,
-        // speech: [
-        //   {
-        //     x: 0.3,
-        //     y: 0.65,
-        //     content: 'Stop it Jack, it\'s still your fault I\'m upset.',
-        //     color: '#FFF',
-        //     direction: 'up-left',
-        //     distance: 2.5,
-        //   },
-        // ],
+        speech: [
+          {
+            x: 0.3,
+            y: 0.65,
+            content: 'Certainly both.',
+            color: '#FFF',
+            direction: 'up-left',
+            distance: 0.9,
+            speech: {
+              content: 'Somehow I identify with cacti…',
+              distance: 1,
+              color: '#FFF',
+              direction: 'up-up-left',
+            },
+          },
+        ],
       },
       {
         asset: 'images.lunchbox_sled',
-        // speech: [
-        //   {
-        //     x: 0.3,
-        //     y: 0.65,
-        //     content: 'Ok ok sorry. Besides cacti have pretty flowers. Is it cactuses?',
-        //     color: '#FFF',
-        //     direction: 'up-up-right',
-        //     distance: 1,
-        //     speech: {
-        //       content: 'Has anyone ever compared you to a cactus?',
-        //       distance: 1.5,
-        //       color: '#FFF',
-        //       direction: 'up-right'
-        //     }
-        //   },
-        // ],
+        speech: [
+          {
+            x: 0.3,
+            y: 0.65,
+            color: '#FFF',
+            content: 'Because of the spines, or the flowers?',
+            direction: 'up-up-right',
+            distance: 1.4,
+          },
+        ],
         x: TAU + 1,
         y: 0,
       },
@@ -301,8 +327,8 @@ const WAVE = [
     name: 'Sin Scale X',
     nick: 'SIN_SCALE_X',
     biome: 'sinusoidalDesert',
-    x: 10,
-    y: -10,
+    x: 0,
+    y: -20,
     requirements: ['DESERT'],
     defaultExpression: '\\sin \\left(\\frac{x}{4}\\right)',
     slider: {
@@ -327,30 +353,30 @@ const WAVE = [
     ],
     sledders: [
       {
-        asset: 'images.sam_sled',
+        asset: 'images.lunchbox_sled',
         speech: [
           {
             x: 0.3,
             y: 0.65,
-            content: 'Hey Jack... it takes more effort to do two sleds... do you want to...',
+            content: 'Can we share a sled again?',
             color: '#FFF',
-            direction: 'up-left',
-            distance: 2.5,
+            direction: 'up-up-right',
+            distance: 1.2,
           },
         ],
         x: 0,
         y: 0,
       },
       {
-        asset: 'images.lunchbox_sled',
+        asset: 'images.sam_sled',
         speech: [
           {
             x: 0.3,
             y: 0.65,
-            content: 'Yes. Yes, I do.',
+            content: '…fine.',
             color: '#FFF',
-            direction: 'up-up-right',
-            distance: 1,
+            direction: 'up-up-left',
+            distance: 0.8,
           },
         ],
         x: TAU,
@@ -364,7 +390,7 @@ const WAVE = [
     biome: 'sinusoidalDesert',
     x: 0,
     y: -20,
-    requirements: [null],
+    requirements: [null, 'SIN_TRANSLATE_X_Y'],
     defaultExpression: '\\sin \\left(\\frac{x}{2}\\right)',
     slider: {
       expression: '$\\cdot \\sin \\left(\\frac{x}{2}\\right)',
@@ -392,8 +418,8 @@ const WAVE = [
         y: 0,
         speech: [
           {
-            x: 0.3,
-            y: 0.65,
+            x: -0.15,
+            y: 0.6,
             content: 'This is cozy.',
             color: '#FFF',
             direction: 'up-up-right',
@@ -407,9 +433,9 @@ const WAVE = [
     name: 'Sin Translate Scale XY',
     nick: 'SIN_TRANSLATE_SCALE_X_Y',
     biome: 'sinusoidalDesert',
-    x: -10,
-    y: -10,
-    requirements: [null, 'COS_SCALE_X_Y', 'SIN_TRANSLATE_X_Y'],
+    x: 10,
+    y: 10,
+    requirements: [null, 'COS_SCALE_X_Y'],
     defaultExpression: '3\\cos \\left(\\frac{x+3}{2}\\right)-1',
     goals: [
       {
@@ -424,6 +450,29 @@ const WAVE = [
       {
         x: -4,
         y: 0,
+        speech: [
+          {
+            speakerX: -0.25,
+            speakerY: 0.6,
+            content: 'Indeed.',
+            color: '#FFF',
+            direction: 'up-up-left',
+            distance: 1.4,
+            speech: {
+              color: '#FFF',
+              content: 'Love sure is complicated.',
+            },
+          },
+          {
+            speakerX: 0.4,
+            speakerY: 0.65,
+            content: 'Best faced together',
+            color: '#FFF',
+            // direction: 'up-right',
+            direction: Vector2(0.5, 0.6),
+            distance: 2.6,
+          },
+        ],
       },
     ],
   },

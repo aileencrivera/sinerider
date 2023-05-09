@@ -61,13 +61,13 @@ const CONSTANT_LAKE = {
   },
   backgroundMusic: {
     asset: 'sounds.music.constant_lake.base',
-    volume: 0.2,
+    volume: 1,
   },
   sounds: [
     {
       asset: 'sounds.music.constant_lake.pad_1_loopable',
       loop: true,
-      volume: 0.3,
+      volume: 1,
       domain: [-20, 0],
     },
     {
@@ -75,6 +75,7 @@ const CONSTANT_LAKE = {
       domain: [0, 8],
       // fadeOut: 3000,
       loop: true,
+      volume: 1,
       // duration: 33000,
     },
     {
@@ -91,7 +92,7 @@ const CONSTANT_LAKE = {
       // fadeOut: 3000,
       // duration: 20000,
       // loop: true,
-      volume: 2,
+      volume: 1,
     },
   ],
   dialogue: [
@@ -101,7 +102,7 @@ const CONSTANT_LAKE = {
       direction: 'up-up-left',
       distance: 1.2,
       speech: {
-        content: 'Let\'s speed up.',
+        content: "Let's speed up.",
         direction: 'up',
         x: -0.5,
         y: 1.3,
@@ -109,11 +110,11 @@ const CONSTANT_LAKE = {
     },
     {
       speaker: 'Jack',
-      content: "I'm happy just to get the views.",
+      content: "I'm just here for the views",
       direction: 'up-up-left',
       speech: {
         speaker: 'Jack',
-        content: "It wouldn't be the end of the world.",
+        content: "Winning isn't everything.",
         direction: 'up',
         x: -0.6,
         y: 1.3,
@@ -136,18 +137,19 @@ const CONSTANT_LAKE = {
     },
     {
       speaker: 'Ada',
-      content: 'When you race, you race to win.',
+      content: 'Winning is the point of racing.',
       direction: 'up-up-right',
       gap: 1,
       // length: 2,
     },
     {
       speaker: 'Jack',
-      content: "I've always wanted to see the north rim.",
+      content: "I've *always* wanted to see the north rim.",
       direction: 'up-up-left',
+      length: 4,
       gap: 1,
       speech: {
-        content: 'Well there are other things to do too. Eternal Canyon is coming up…',
+        content: "But there's so much to see… like, Eternal Canyon.",
         direction: 'up',
         x: -0.6,
         y: 1.3,
@@ -156,7 +158,7 @@ const CONSTANT_LAKE = {
     },
     {
       speaker: 'Ada',
-      content: "We'll come back someday. It's not on the route.",
+      content: "It's not on the route, Jack.",
       direction: 'up-up-left',
       gap: 0,
     },
@@ -165,7 +167,7 @@ const CONSTANT_LAKE = {
       content: 'It would be a crime not to.',
       direction: 'up-up-right',
       speech: {
-        content: "We both know we're not coming back. Can we at least stop for the sunset?",
+        content: 'Can we at least stop for the sunset?',
         direction: 'up',
         x: 0.6,
         y: 1.3,
@@ -175,24 +177,20 @@ const CONSTANT_LAKE = {
     {
       speaker: 'Ada',
       color: '#fff',
-      content: 'It\'s very nice and I\'m glad you see the beauty here. We can watch while we trek.',
+      content: 'We can watch while we trek.',
       direction: 'up-up-left',
     },
     {
       speaker: 'Jack',
       color: '#fff',
-      content: "O great cheeto ball, we mean no disrespect!",
+      content: 'We mean no disrespect, great dayball!',
       direction: 'up-right',
       length: 4,
-      gap: 2,
       speech: {
-        content: "You know it's not good to anger the sun, Ada.",
-        direction: 'up-right',
-        length: 4,
-        gap: 1,
+        content: "It's not good to anger the sun, Ada.",
+        direction: 'up-up-right',
         color: '#fff',
       },
-
     },
     {
       speaker: 'Ada',
@@ -210,11 +208,11 @@ const CONSTANT_LAKE = {
       gap: 0,
     },
     {
-      speaker: 'Jack',
+      speaker: 'Ada',
       color: '#fff',
-      content: "Me? Never.",
-      gap: 1,
-    }
+      content: 'I still love you though.',
+      gap: 4,
+    },
     // {
     //   speaker: 'Ada',
     //   color: '#fff',
@@ -229,11 +227,11 @@ const CONSTANT_LAKE = {
       asset: 'images.sam_float',
       bobSpeed: 0.918218,
       x: -22,
-      victoryX: 35,
+      victoryX: 36,
       range: [-24, 37],
       walkers: {
         name: 'Jack',
-        asset: 'images.benny_float',
+        asset: 'images.jack_float',
         x: -24,
       },
     },

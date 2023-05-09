@@ -7,7 +7,7 @@ function World(spec) {
 
   const { ui, screen, levelData, requestDraw, tickDelta, version } = spec
 
-  const storage = PlayerStorage()
+  const playerStorage = PlayerStorage()
 
   let running = false
   let runTime = 0
@@ -127,6 +127,7 @@ function World(spec) {
       levelData,
       getEditing,
       setLevel,
+      playerStorage,
       active: false,
       parent: self,
       drawOrder: LAYERS.navigator,
@@ -138,6 +139,9 @@ function World(spec) {
       try {
         urlData = JSON.parse(LZString.decompressFromBase64(url.search.slice(1)))
         setLevel(urlData.nick, urlData)
+        // hide map if it's a puzzle
+        if (world.level.name.includes('puzzle'))
+          ui.navigatorButton.setAttribute('hide', true)
 
         // Very stupid, maybe Navigator should just be instantiated after this block?
         const bubble = navigator.getBubbleByNick(urlData.nick)
@@ -152,20 +156,47 @@ function World(spec) {
     }
 
     if (_.endsWith(location.href, '#random')) setLevel('RANDOM')
-    else setLevel(levelData[0].nick)
+    else setLevel(playerStorage.activeLevel ?? levelData[0].nick)
   }
 
   function assetsComplete() {
     loadQuad()
 
+    // Remove the loading bar
+    ui.loadingProgressBarContainer.setAttribute('hide', true)
+
     ui.loadingVeilString.innerHTML = 'click to begin'
     ui.loadingVeil.addEventListener('click', loadingVeilClicked)
+
+    const c = playerStorage.getCompletedLevels().length
+    const total = levelData.length
+    const percent = Math.round((100 * c) / total)
+    const congrats = percent < 100 ? '' : 'well done, '
+    if (c) {
+      ui.resetSolutionsString.setAttribute('hide', false)
+      ui.resetSolutionsString.innerHTML = `You have completed ${c}/${total} levels (${congrats}${percent}%). Reset?`
+      ui.resetSolutionsString.addEventListener('click', (event) => {
+        ui.resetProgressConfirmationDialog.showModal(), event.stopPropagation()
+      })
+      ui.resetProgressConfirmButton.addEventListener('click', (event) => {
+        resetSavedSolutions()
+        ui.resetProgressConfirmationDialog.close()
+      })
+      ui.resetProgressCancelButton.addEventListener('click', (event) => {
+        ui.resetProgressConfirmationDialog.close()
+        event.stopPropagation()
+      })
+    }
+  }
+
+  function resetSavedSolutions(event) {
+    ui.resetSolutionsString.remove()
+    playerStorage.clear()
   }
 
   function assetsProgress(progress, total) {
-    ui.loadingVeilString.innerHTML = `loading…<br>${Math.round(
-      (100 * progress) / total,
-    )}%`
+    const percent = Math.round((100 * progress) / total)
+    ui.loadingProgressBar.style.width = `${percent}%`
   }
 
   function setLevel(nick, urlData = null) {
@@ -173,7 +204,8 @@ function World(spec) {
 
     levelBubble = navigator.getBubbleByNick(nick)
     isPuzzle = urlData?.isPuzzle ?? false
-    var savedLatex
+    let savedLatex
+    let completed = false
     if (isPuzzle) {
       levelDatum = generatePuzzleLevel(urlData)
       savedLatex = levelDatum.expressionOverride
@@ -185,7 +217,10 @@ function World(spec) {
       } else {
         levelDatum = _.find(levelData, (v) => v.nick == nick)
       }
-      savedLatex = urlData?.savedLatex ?? storage.getLevel(nick)?.savedLatex
+      savedLatex =
+        urlData?.savedLatex ?? playerStorage.getLevel(nick)?.savedLatex
+      completed =
+        urlData?.completed ?? playerStorage.getLevel(nick)?.completed ?? false
 
       if (urlData?.goals && urlData?.goals.length)
         levelDatum.goals = (levelDatum.goals ?? []).concat(urlData?.goals)
@@ -206,19 +241,22 @@ function World(spec) {
       isBubbleLevel: false,
       world: self,
 
-      storage,
+      storage: playerStorage,
       savedLatex,
+      completed,
       urlData,
     })
 
     level.playOpenMusic()
     level.restart()
 
-    ui.levelText.value = levelDatum.name
-    ui.levelButtonString.innerHTML = levelDatum.name
+    if (ui.levelText) {
+      ui.levelText.value = levelDatum.name
+      ui.levelButtonString.innerHTML = levelDatum.name
 
-    ui.levelInfoNameStr.innerHTML = levelDatum.name
-    ui.levelInfoNickStr.innerHTML = levelDatum.nick
+      ui.levelInfoNameStr.innerHTML = levelDatum.name
+      ui.levelInfoNickStr.innerHTML = levelDatum.nick
+    }
 
     setNavigating(false)
   }
@@ -253,10 +291,21 @@ function World(spec) {
   }
 
   function makeTwitterSubmissionUrl() {
+    const linkToPuzzle = `https://sinerider.com/puzzle/${levelDatum.nick}`
+    const solution = ui.mathField.getPlainExpression().replace(/\s/g, '')
+    const twitterPrefill = `#${levelDatum.nick} My solution for the #sinerider puzzle of the day took ${Math.round(timeTaken() * 10) / 10} seconds & ${charCount()} characters
+    
+    ${solution}
+    
+    Try solving it yourself: ${linkToPuzzle}`
+    return (
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(twitterPrefill)}`
+    )
+    // @msw: While implementing a quick-fix, the following is a noop
     return (
       'https://twitter.com/intent/tweet?text=' +
       encodeURIComponent(
-        '#sinerider ' +
+        'I did it! #sinerider ' +
           levelDatum.nick +
           ' ' +
           level.currentLatex.replace(/\s/g, ''),
@@ -264,16 +313,34 @@ function World(spec) {
     )
   }
 
+  function openRedditModal() {
+    ui.redditOpenModal.setAttribute('hide', false)
+    let text = `#sinerider ${levelDatum.nick} \`${level.currentLatex.replace(
+      /\s/g,
+      '',
+    )}\``
+    ui.redditOpenCommand.setAttribute('value', text)
+    // It would be nice to use this, but it doesn't work for whatever reason
+    // navigator.clipboard.writeText(text)
+    ui.redditOpenCommand.select()
+    document.execCommand('copy')
+  }
+
+  function charCount() {
+    return ui.mathFieldStatic.latex().length
+  }
+
+  function timeTaken() {
+    return Math.round(runTime * 100) / 100
+  }
+
   function levelCompleted(soft = false) {
     setCompletionTime(runTime)
 
-    const timeTaken = Math.round(runTime * 100) / 100
-    const charCount = ui.mathFieldStatic.latex().length
-
     ui.timeTaken.innerHTML =
-      timeTaken + ' second' + (timeTaken === 1 ? '' : 's')
+      timeTaken() + ' second' + (timeTaken() === 1 ? '' : 's')
     ui.charCount.innerHTML =
-      charCount + ' character' + (charCount === 1 ? '' : 's')
+      charCount() + ' character' + (charCount() === 1 ? '' : 's')
 
     if (soft) {
       nextLevel(2.5)
@@ -285,10 +352,28 @@ function World(spec) {
 
     const isPuzzle = true
     if ('isPuzzle' in levelDatum && levelDatum['isPuzzle']) {
-      ui.submitTwitterScoreDiv.setAttribute('hide', false)
-      ui.submitTwitterScoreLink.setAttribute('href', makeTwitterSubmissionUrl())
+      // hide next button
+      ui.nextButton.setAttribute('hide', true)
+
+      const puzzleMsgs = document.getElementsByClassName('puzzle-msg')
+      for (let idx = 0; idx < puzzleMsgs.length; idx++) {
+        puzzleMsgs[idx].setAttribute('hide', false)
+      }
+
+      $('#twitter-submission-url').setAttribute(
+        'href',
+        makeTwitterSubmissionUrl(),
+      )
+
+      // Hide reddit for the time being
+      // console.log($('#submit-reddit-score'))
+      // $('#submit-reddit-score').onclick = openRedditModal
+
+      ui.redditOpenCloseButton.onclick = () =>
+        ui.redditOpenModal.setAttribute('hide', true)
     } else {
-      ui.submitTwitterScoreDiv.setAttribute('hide', true)
+      ui.submitTwitterScoreDiv?.setAttribute('hide', true)
+      ui.submitRedditScoreDiv?.setAttribute('hide', true)
     }
     levelBubble?.complete()
   }
@@ -316,9 +401,15 @@ function World(spec) {
   }
 
   function nextLevel(transitionDuration = 1) {
-    transitionNavigating(true, transitionDuration, () => {
+    if ('isPuzzle' in levelDatum && levelDatum['isPuzzle']) {
+      ui.victoryBar.setAttribute('hide', true)
       stopRunning(false)
-    })
+      level.restart()
+    } else {
+      transitionNavigating(true, transitionDuration, () => {
+        stopRunning(false)
+      })
+    }
   }
 
   function onClickNextButton() {
@@ -375,12 +466,14 @@ function World(spec) {
     ui.victoryBar.setAttribute('hide', true)
 
     ui.controlBar.setAttribute('hide', navigating)
-    ui.navigatorButton.setAttribute('hide', false)
     ui.expressionEnvelope.setAttribute('hide', false)
     ui.runButton.setAttribute('hide', false)
     ui.tryAgainButton.setAttribute('hide', true)
     ui.stopButton.setAttribute('hide', true)
     ui.resetButton.setAttribute('hide', false)
+
+    if (!level.name.startsWith('puzzle_'))
+      ui.navigatorButton.setAttribute('hide', false)
 
     if (!navigating) {
       // HACK: Timed to avoid bug in Safari (at least) that causes whole page to be permanently offset when off-screen text input is focused
@@ -400,39 +493,108 @@ function World(spec) {
   }
 
   function generateRandomLevel() {
-    const goalCount = _.random(2, 5)
     const goals = []
+    // Skew towards 3-goal levels, with potential for as many as 7
+    const goalCount = _.random(_.random(2, 3), _.random(3, 7))
 
+    // Generate goals at random locations
     for (let i = 0; i < goalCount; i++) {
-      const goalPosition = {}
+      let x = 0
+      let y = 0
+
+      const type = Math.random() < 1 / (goalCount + 1) ? 'dynamic' : 'fixed'
 
       do {
-        goalPosition.x = _.random(-10, 10)
-        goalPosition.y = _.random(-10, 10)
+        x = _.random(-16, 16)
+        y = _.random(-12, 12)
       } while (
-        _.find(goals, (v) => v.x == goalPosition.x && v.y == goalPosition.y)
+        _.find(goals, (v) => {
+          const d = Math.sqrt(Math.pow(x - v.x, 2) + Math.pow(y - v.y, 2))
+
+          if (type == 'dynamic' && v.type == 'dynamic') {
+            if (Math.abs(v.x - x) < 1.5) return true
+          } else if (type == 'dynamic' || v.type == 'dynamic') {
+            if (Math.abs(v.x - x) < 1.5) return true
+          } else {
+            if (d <= 1.9) return true
+          }
+        })
       )
 
-      goals.push(goalPosition)
+      goals.push({
+        x,
+        y,
+        type,
+      })
     }
 
-    const sledderCount = 1
+    // Apply ordering to goals
+    {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+
+      const ordered =
+        Math.random() < 0.5 ||
+        _.filter(goals, (v) => v.type == 'dynamic').length > 1
+      const orderCount = !ordered ? 0 : Math.max(2, _.random(0, goalCount))
+
+      let i = 0
+      let a = [...goals]
+      while (i < orderCount) {
+        i++
+
+        a = _.shuffle(a)
+        const v = a.pop()
+
+        if (alphabet[0] == 'A' && i == orderCount) v.order = 'B'
+        else if (Math.random() < 0.5) v.order = alphabet[0]
+        else v.order = alphabet.shift()
+      }
+    }
+
+    // Guarantee that there is never more than one unordered dynamic goal
+    {
+      let unorderedDynamicGoals = 0
+      for (goal of goals) {
+        if (goal.type == 'dynamic') {
+          if (unorderedDynamicGoals > 0) goal.type = 'fixed'
+          unorderedDynamicGoals++
+        }
+      }
+    }
+
+    const sledderCount =
+      goalCount > 2 && Math.random() < 0.5 ? _.random(1, 2) : 1
     const sledders = []
+    const sledderAssets = [
+      'images.ada_sled',
+      'images.jack_sled',
+      'images.ada_jack_sled',
+    ]
 
     for (let i = 0; i < sledderCount; i++) {
       let sledderX
 
       do {
-        sledderX = _.random(-10, 10)
+        sledderX = _.random(-16, 16)
       } while (
-        _.find(goals, (v) => v.x == sledderX) ||
-        _.find(sledders, (v) => v.x == sledderX)
+        _.find(goals, (v) => Math.abs(v.x - sledderX) < 1.5) ||
+        _.find(sledders, (v) => Math.abs(v.x - sledderX) < 3.5)
       )
 
-      sledders.push({ x: sledderX })
+      sledders.push({
+        x: sledderX,
+        asset: sledderCount == 1 ? _.sample(sledderAssets) : sledderAssets[i],
+      })
     }
 
-    const biomes = _.values(Colors.biomes)
+    const biome = _.sample([
+      'westernSlopes',
+      'valleyParabola',
+      'eternalCanyon',
+      'sinusoidalDesert',
+      'logisticDunes',
+      'hilbertDelta',
+    ])
 
     return {
       name: 'Random Level',
@@ -440,11 +602,10 @@ function World(spec) {
       drawOrder: LAYERS.level,
       x: -10,
       y: 0,
-      colors: biomes[_.random(0, biomes.length)],
       defaultExpression: '0',
-      hint: 'Soft eyes, grasshopper.',
       goals,
       sledders,
+      biome,
     }
   }
 

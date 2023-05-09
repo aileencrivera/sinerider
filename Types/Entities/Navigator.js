@@ -1,7 +1,15 @@
 function Navigator(spec) {
   const self = Entity(spec, 'Navigator')
 
-  const { screen, levelData, tickDelta, getEditing, setLevel, assets } = spec
+  const {
+    screen,
+    levelData,
+    tickDelta,
+    getEditing,
+    setLevel,
+    assets,
+    playerStorage,
+  } = spec
 
   let mapFov = 15
 
@@ -23,7 +31,7 @@ function Navigator(spec) {
     drawOrder: LAYERS.map,
     anchored: false,
     size: 190,
-    x: 75,
+    x: 85,
     y: -5.5,
     asset: 'images.world_map',
   })
@@ -40,10 +48,17 @@ function Navigator(spec) {
 
   const bubbles = _.map(levelData, createBubble)
   const bubbleRenderQueue = []
-  const bubbleRenderCap = 1
+  const bubbleRenderCap = 10
 
   function start() {
     if (initialBubble) initialBubble.completeAllRequirements()
+    for (const datum of playerStorage.getCompletedLevels()) {
+      let bubble = getBubbleByNick(datum.nick)
+      if (bubble) {
+        bubble.complete()
+        bubble.completeAllRequirements()
+      }
+    }
   }
 
   function tick() {
@@ -105,14 +120,6 @@ function Navigator(spec) {
       0,
       () => {
         assets.sounds.map_zoom_out.play()
-        moveToLevel(nick, 0.5, () => {
-          if (nicks.length > 0 && nicks[0] != nick)
-            assets.sounds.map_zoom_highlighted.play()
-
-          // setTimeout(() => {
-          //   moveToLevel(nicks, 1)
-          // }, 0)
-        })
       },
       8,
     )
@@ -177,9 +184,7 @@ function Navigator(spec) {
     let b = 0
     for (bubble of bubbles) {
       if (bubble.visible && !bubble.rendered) {
-        // We cap the number of bubbles rendered synchronously to prevent crashing on some iphones
-        if (b++ < bubbleRenderCap) bubble.render()
-        else bubbleRenderQueue.push(bubble)
+        bubbleRenderQueue.push(bubble)
       }
     }
   }

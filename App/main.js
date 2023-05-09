@@ -12,6 +12,10 @@ const ui = {
   levelButtonString: $('#level-button > .string'),
   resetButton: $('#reset-button'),
 
+  resetProgressConfirmationDialog: $('#reset-progress-confirmation-dialog'),
+  resetProgressConfirmButton: $('#reset-progress-confirmation-yes'),
+  resetProgressCancelButton: $('#reset-progress-confirmation-no'),
+
   resetConfirmationDialog: $('#reset-confirmation-dialog'),
   resetConfirmButton: $('#reset-confirmation-yes'),
   resetCancelButton: $('#reset-confirmation-no'),
@@ -21,6 +25,12 @@ const ui = {
   veil: $('#veil'),
   loadingVeil: $('#loading-veil'),
   loadingVeilString: $('#loading-string'),
+  resetSolutionsString: $('#reset-string'),
+  loadingProgressBarContainer: $('#loading-progress-bar-container'),
+  loadingProgressBar: $('#loading-progress-bar'),
+  twitterLinkRedirect: $('#twitter-link'),
+  redditLinkRedirect: $('#reddit-link'),
+  githubLinkRedirect: $('#github-link'),
 
   bubblets: $('.bubblets'),
 
@@ -33,6 +43,7 @@ const ui = {
   timeTaken: $('#time-taken'),
   charCount: $('#character-count'),
   nextButton: $('#next-button'),
+  nextButtonText: $('#next-button-text'),
 
   messageBar: $('#message-bar'),
   messageBarString: $('#message-bar > .string'),
@@ -44,8 +55,9 @@ const ui = {
   timeString: $('#time-string'),
   completionTime: $('#completion-time'),
 
-  submitTwitterScoreDiv: $('#submit_twitter_score_div'),
-  submitTwitterScoreLink: $('#submit_twitter_score_link'),
+  redditOpenModal: $('#reddit-open-bar'),
+  redditOpenCommand: $('#reddit-open-command'),
+  redditOpenCloseButton: $('#close-reddit-open-button'),
 
   controlBar: $('#controls-bar'),
   expressionText: $('#expression-text'),
@@ -72,7 +84,12 @@ const ui = {
   stopButtonString: $('#stop-button > .string'),
 
   navigatorFloatingBar: $('#navigator-floating-bar'),
+
   showAllButton: $('#show-all-button'),
+
+  showAllConfirmationDialog: $('#show-all-confirmation-dialog'),
+  showAllConfirmButton: $('#show-all-yes'),
+  showAllCancelButton: $('#show-all-no'),
 
   editorInspector: {
     editorInspector: $('#editor-inspector'),
@@ -100,6 +117,27 @@ const editor = Editor(ui)
 
 ui.levelText.setAttribute('hide', true)
 ui.veil.setAttribute('hide', true)
+
+// Detect mobile devices and show the warning
+const ua = navigator.userAgent || navigator.vendor || window.opera
+let MOBILE = false
+
+if (
+  /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
+    ua,
+  ) ||
+  /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
+    ua.substr(0, 4),
+  )
+) {
+  MOBILE = true
+}
+
+if (MOBILE) {
+  alert(
+    "This beta does not yet support mobile devices (we are working on that). Please use a device with a keyboard. We promise it's worth it!",
+  )
+}
 
 const canvas = $('#canvas')
 
@@ -238,13 +276,14 @@ if (!stepping) {
 }
 
 // T Parameter Slider
-ui.tSlider.addEventListener('input', () => {
-  if (world.globalScope) {
+ui.tSlider.addEventListener('input', refreshTSlider)
+function refreshTSlider() {
+  if (world.globalScope && !world.running) {
     const newT = math.remap(0, 100, 0, 10, Number(ui.tSlider.value))
 
-    world.level.sendEvent('tVariableChanged', [newT])
+    world.level?.sendEvent('tVariableChanged', [newT])
   }
-})
+}
 
 // MathQuill
 
@@ -345,6 +384,21 @@ function onClickHint() {
 
 ui.dottedHintButton.addEventListener('click', onClickHint)
 
+// prevent twitter link click from triggering level click
+ui.twitterLinkRedirect.addEventListener('click', function (event) {
+  event.stopPropagation()
+})
+
+// prevent reddit link click from triggering level click
+ui.redditLinkRedirect.addEventListener('click', function (event) {
+  event.stopPropagation()
+})
+
+// prevent github link click from triggering level click
+ui.githubLinkRedirect.addEventListener('click', function (event) {
+  event.stopPropagation()
+})
+
 // Initial page state
 {
   let volume = window.localStorage.getItem('volume')
@@ -382,7 +436,12 @@ ui.stopButton.addEventListener('click', onClickRunButton)
 ui.tryAgainButton.addEventListener('click', onClickRunButton)
 
 function onClickShowAllButton(event) {
-  world.navigator.showAll = !world.navigator.showAll
+  let showall = localStorage.getItem('ShowAll')
+  if (showall != 'True') {
+    ui.showAllConfirmationDialog.showModal()
+  } else {
+    onShowAllConfirm()
+  }
 }
 
 ui.showAllButton.addEventListener('click', onClickShowAllButton)
@@ -411,6 +470,20 @@ function onResetCancel() {
 }
 
 ui.resetCancelButton.addEventListener('click', onResetCancel)
+
+function onShowAllConfirm() {
+  world.navigator.showAll = !world.navigator.showAll
+  ui.showAllConfirmationDialog.close()
+  window.localStorage.setItem('ShowAll', 'True')
+}
+
+ui.showAllConfirmButton.addEventListener('click', onShowAllConfirm)
+
+function onShowAllCancel() {
+  ui.showAllConfirmationDialog.close()
+}
+
+ui.showAllCancelButton.addEventListener('click', onShowAllCancel)
 
 function onResizeWindow(event) {
   world.sendEvent('resize', [window.innerWidth, window.innerHeight])
@@ -457,6 +530,8 @@ canvas.addEventListener('mousedown', onMouseDownCanvas)
 canvas.addEventListener('pointerdown', onMouseDownCanvas)
 
 function onMouseUpCanvas(event) {
+  ui.tSlider.value = 0
+  refreshTSlider()
   world.clickableContext.processEvent(event, 'mouseUp')
   event.preventDefault()
   onGridlinesDeactive()
@@ -466,11 +541,9 @@ canvas.addEventListener('mouseup', onMouseUpCanvas)
 window.addEventListener('pointerup', onMouseUpCanvas)
 
 ui.levelInfoDiv.addEventListener('mouseover', function () {
-  console.log('mouseover')
   ui.hideLevelInfoButton.setAttribute('hide', false)
 })
 
 ui.levelInfoDiv.addEventListener('mouseleave', function () {
-  console.log('mouseleave')
   ui.hideLevelInfoButton.setAttribute('hide', true)
 })

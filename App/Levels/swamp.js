@@ -9,12 +9,12 @@ const SWAMP = [
     defaultExpression: '0',
     goals: [
       {
-        x: 8,
+        x: 12,
         y: 0,
       },
       {
-        x: 8,
-        y: -8,
+        x: 6,
+        y: -6,
       },
     ],
     sledders: [
@@ -23,30 +23,18 @@ const SWAMP = [
           {
             speakerX: -0.4,
             speakerY: 0.7,
-            content: 'Well maybe a little.',
+            content: 'This place creeps me out.',
             direction: 'up-up-left',
-            distance: 1.4,
-            color: "#FFF",
-            speech: {
-              content: 'I\'m not going to sulk about it.',
-              direction: 'up-left',
-              color: "#FFF",
-              distance: 0.8,
-            },
+            distance: 2.2,
+            color: '#FFF',
           },
           {
-            speakerX: 0.7,
-            speakerY: 0.7,
-            content: 'Ok...',
-            color: "#FFF",
-            direction: 'right-up',
-            distance: 2.2,
-            speech: {
-              content: 'So you\'re sure you\'re ok with losing?',
-              direction: 'up-right-right',
-              color: "#FFF",
-              distance: 2.2,
-            },
+            speakerX: 0.5,
+            speakerY: 0.65,
+            content: 'Yeah...',
+            color: '#FFF',
+            direction: 'up-up-right',
+            distance: 1.6,
           },
         ],
       },
@@ -76,26 +64,26 @@ const SWAMP = [
       {
         speech: [
           {
-            distance: 1.5,
-            speakerX: 0.4,
-            speakerY: 0.75,
+            distance: 1.6,
+            speakerX: 0.6,
+            speakerY: 0.6,
             color: '#FFF',
-            direction: 'right-up-up',
-            content: 'Yeah but you\'re ADA! You already rule.',
+            direction: 'up-up-right',
+            content: 'Just follow me!!',
             speech: {
-              distance: 1.5,
+              distance: 1,
               color: '#FFF',
-              direction: 'up-right',
-              content: 'I still don\'t get why it\'s so important for you.',
+              direction: 'up',
+              content: 'Come on. I have a shortcut.',
             },
           },
           {
-            distance: 2.2,
-            speakerX: -0.25,
-            speakerY: 0.65,
+            distance: 2.3,
+            speakerX: -0.3,
+            speakerY: 0.5,
             color: '#FFF',
-            content: 'It\'s different for you. Nobody thinks a girl can ride the sine waves.',
-            direction: 'left-up-up',
+            content: 'Jack…',
+            direction: 'up-up-left',
             align: 'right',
           },
         ],
@@ -113,10 +101,10 @@ const SWAMP = [
     goals: [
       {
         x: 0,
-        y: -8,
+        y: -4,
       },
       {
-        x: 8,
+        x: 4,
         y: 0,
       },
       {
@@ -124,11 +112,33 @@ const SWAMP = [
         y: 8,
       },
       {
-        x: -8,
+        x: -4,
         y: 0,
       },
     ],
-    sledders: [{}],
+    sledders: [
+      {
+        speech: [
+          {
+            distance: 2,
+            speakerX: 0.5,
+            speakerY: 0.7,
+            color: '#FFF',
+            direction: 'up-up-right',
+            content: 'But first, a little more exploring…',
+          },
+          {
+            distance: 1.4,
+            speakerX: -0.3,
+            speakerY: 0.55,
+            color: '#FFF',
+            content: '…',
+            direction: 'up-up-left',
+            align: 'right',
+          },
+        ],
+      },
+    ],
   },
   {
     name: 'False Cubic',
