@@ -29,6 +29,13 @@ function Sound(spec) {
   let lastVol
 
   function awake() {
+    if (!howl) {
+      // TODO: Need more robust solution for either
+      // ensuring that all assets get loaded or throwing
+      // errors for assets that forget  to be
+      // included in biome/level spec/eden.js
+      throw `Expected sound (${asset}) to be loaded`
+    }
     if (!domain) {
       soundId = howl.play()
       played = true

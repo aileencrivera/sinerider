@@ -19,9 +19,14 @@
 function Screen(spec = {}) {
   const transform = Transform()
 
-  let { canvas, element = window } = spec
+  let {
+    canvas,
+    element = window,
+    // Disable blending by default for performance
+    alpha = false,
+  } = spec
 
-  const ctx = canvas.getContext('2d', { alpha: false })
+  const ctx = canvas.getContext('2d', { alpha })
 
   let width
   let height
@@ -34,9 +39,14 @@ function Screen(spec = {}) {
   const minFramePoint = Vector2()
   const maxFramePoint = Vector2()
 
+  let resolutionScalingFactor = 1.0
+
   function resize() {
     width = element.innerWidth || element.width
     height = element.innerHeight || element.height
+
+    width *= resolutionScalingFactor
+    height *= resolutionScalingFactor
 
     canvas.width = width
     canvas.height = height
@@ -133,6 +143,13 @@ function Screen(spec = {}) {
     },
     get maxFramePoint() {
       return maxFramePoint
+    },
+
+    get resolutionScalingFactor() {
+      return resolutionScalingFactor
+    },
+    set resolutionScalingFactor(o) {
+      resolutionScalingFactor = o
     },
   }
 }

@@ -34,12 +34,20 @@ html {
   overflow: hidden;
 }
 
-canvas {
+#canvas {
   user-select: none;
+  width: 100vw;
+  height: 100vh;
 }
 
 .map {
   /* transform: scale(1.42) rotateX(40deg) rotateY(-4deg); */
+}
+
+#graphics-settings-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .bar {
@@ -64,10 +72,6 @@ body > .bar {
 
   left: 20px;
   right: 20px;
-}
-
-.bar > * {
-  margin: 0 4px 0 0;
 }
 
 .bar > *:last-child {
@@ -279,6 +283,11 @@ input[valid='false'] {
   bottom: -50vh;
 }
 
+.hbar {
+  display: flex;
+  flex-direction: row;
+}
+
 #expression-text {
   display: none;
   flex-grow: 1;
@@ -336,6 +345,18 @@ input[valid='false'] {
   opacity: 0;
 }
 
+#editor-copy-puzzle-link {
+  background: rgb(116, 146, 255);
+}
+
+#editor-copy-editor-link {
+  background: rgb(255, 162, 116);
+}
+
+#share-button {
+  background: rgb(116, 146, 255);
+}
+
 #run-button {
   position: absolute;
 
@@ -345,6 +366,33 @@ input[valid='false'] {
 
 #try-again-button {
   animation: pulse 0.5s infinite;
+}
+
+#skip-cutscene-button {
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+}
+
+/* TODO: Make copy link dialog for modal look decent */
+
+#share-editor-level-dialog > .hbar {
+  align-items: center;
+  gap: 20px;
+  border: 2px solid #000;
+  padding: 0px 10px;
+  max-width: 100%;
+  margin-top: 10px;
+}
+
+#editor-sharing-link {
+  width: 300px;
+  overflow: scroll;
+}
+
+#editor-copy-sharing-link-button {
+  background: rgb(99, 99, 255);
 }
 
 .reset-button {
@@ -401,8 +449,15 @@ input[valid='false'] {
   background: #4f6;
 }
 
-.reset-button:not(:hover) {
+.reset-button:not(:hover), #skip-cutscene-button:not(:hover) {
   background: #f46;
+}
+
+/* TODO: Clean up settings button, use existing CSS */
+#settings-button {
+  margin-right: 20px;
+  border-radius: 0 0 10px 10px;
+  font-size: 2.4rem;
 }
 
 #next-button:not(:hover) {
@@ -463,13 +518,13 @@ input[valid='false'] {
   display: inline;
 }
 
-#hovertext {
+.hovertext {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black;
 }
 
-#hovertext:before {
+.hovertext:before {
   content: attr(data-hover);
   visibility: hidden;
   opacity: 0;
@@ -488,7 +543,7 @@ input[valid='false'] {
   left: -150%;
 }
 
-#hovertext:hover:before {
+.hovertext:hover:before {
   opacity: 1;
   visibility: visible;
 }
@@ -1054,13 +1109,22 @@ input[valid='false'] {
 
 #editor-inspector,
 #editor-spawner {
-  background: '#000';
+  background: #e8e8e8;
   display: flex;
   align-items: center;
-  height: 2.5em;
+  max-height: 2.5em;
   column-gap: 10px;
-  padding: 3px 10px;
-  margin: auto;
+  padding: 10px 10px;
+  margin: 10px 0 0 0;
+}
+
+#editor-spawner canvas {
+  height: 30px;
+}
+
+#editor-inspector .button, #editor-spawner .button {
+  padding: 5px 8px;
+  box-shadow: none;
 }
 
 #editor-order-input {
@@ -1070,6 +1134,11 @@ input[valid='false'] {
 
 #editor-x-input,
 #editor-y-input {
+  width: 5em;
+}
+
+#editor-start-input,
+#editor-end-input {
   width: 5em;
 }
 
@@ -1097,6 +1166,10 @@ input[valid='false'] {
 .editor-bar[hide='false'] {
   display: inherit;
   animation: show-editor-bar 0.5s;
+}
+
+.editor-sliding-up {
+  transform: translateY(calc(-100% - 73px / 2));
 }
 
 @keyframes show-editor-bar {

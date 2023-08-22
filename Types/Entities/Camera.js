@@ -302,7 +302,7 @@ function Camera(spec) {
       return fov
     },
     set fov(v) {
-      setFov(fov)
+      setFov(v)
     },
 
     get activeDirector() {

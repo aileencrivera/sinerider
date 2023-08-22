@@ -1,4 +1,6 @@
-function WaterQuad(assets) {
+function LavaQuad(spec) {
+  const { assets } = spec
+
   const canvas = document.createElement('canvas')
 
   canvas.width = 1024
@@ -16,24 +18,11 @@ function WaterQuad(assets) {
 
   const utils = GLUtils(gl)
 
-  const quad = utils.Vertices(gl.STATIC_DRAW, {
-    aCoords: {
-      type: 'vec2',
-      data: [-1, -1, -1, 1, 1, -1, 1, 1],
-    },
-    aTexCoords: {
-      type: 'vec2',
-      data: [0, 0, 0, 1, 1, 0, 1, 1],
-    },
-  })
-
   const shaders = assets.shaders
 
-  const ctx = screen.ctx
-
-  const waterProgram = utils.Program({
+  const lavaProgram = utils.Program({
     vert: shaders.quad_vert,
-    frag: shaders.lake_frag,
+    frag: shaders.volcano.lava,
   })
 
   let t = 0
@@ -43,10 +32,15 @@ function WaterQuad(assets) {
   }
 
   function draw() {
-    waterProgram
+    // TODO: Move to shared state
+    // TODO: Fix and reuse quad logic/entity wrapper
+    const x = world.level.sledders[0].transform.x
+    const sunsetTime = 12 * Math.exp(-(((x - 221) / 100) ** 2))
+    lavaProgram
       .use()
-      .vertices(quad)
-      .uniform('time', t)
+      .vertices(utils.quad)
+      .uniform('t', t)
+      .uniform('progress', sunsetTime)
       .viewport(canvas.width, canvas.height)
       .draw(gl.TRIANGLE_STRIP, 4)
   }
@@ -54,7 +48,7 @@ function WaterQuad(assets) {
   return {
     update,
     draw,
-    name: 'WaterQuad',
+    name: 'LavaQuad',
     get canvas() {
       return canvas
     },
